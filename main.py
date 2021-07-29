@@ -24,8 +24,8 @@ while True:
     for result in results:
         cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
         film = cur.fetchone()
-        print(f'{film[1]}: {result[0]} --> {result[1]}\n'
-              f'Текст фразы: {result[2]}\n'
-              f'О фильме: {film[2]}\n'
-              f'Рейтинг фильма на Кинопоиске: {film[3]}')
+        a = f'{film[1]}: {result[0]} --> {result[1]}\n' \
+            f'Текст фразы: {result[2]}\n' \
+            f'О фильме: {film[2]}\n' \
+            f'Рейтинг фильма на Кинопоиске: {film[3]}'
         print('-------------------------------------------------------------')

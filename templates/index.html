@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}
+Главная страница
+{% endblock %}
+{% block body %}
+<div class="container mt-5">
+    <h1 class="font-bd">Поиск фильма по фразе из него</h1>
+    <form method="post">
+
+        <input type="text" name="fraze" class="frame-linked" placeholder="Фраза из фильма"><br>
+        <input type="submit" class="btn-linked" value="Отправить">
+        <img src="static/Frame.png">
+
+    </form>
+
+</div>
+{% endblock %}

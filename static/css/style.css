@@ -1,0 +1,116 @@
+body {
+    background: #181818;
+}
+.btn-linked {
+    position: absolute;
+    width: 350px;
+    height: 60px;
+    left: 165px;
+    top: 317px;
+
+    /* style */
+
+    background: linear-gradient(133.9deg, rgba(255, 255, 255, 0) -29.69%, #739EF2 141.09%), #1901AA;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 25px;
+    /* identical to box height, or 156% */
+
+    text-align: center;
+
+    color: #FFFFFF;
+
+}
+.textgl {
+    position: absolute;
+    width: 738px;
+    height: 152px;
+    left: 351px;
+    top: 341px;
+    font-size: 64px;
+    line-height: 76px;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+
+.frame-linked {
+    position: absolute;
+    width: 635px;
+    height: 60px;
+    left: 165px;
+    top: 233px;
+
+    background: #181818;
+    border: 3px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 25px;
+    color: #FFFFFF;
+    /* identical to box height, or 156% */
+
+    text-align: center;
+}
+body {
+    background: 181818;
+}
+.font-bd {
+    position: absolute;
+    width: 738px;
+    height: 152px;
+    left: 165px;
+    top: 63px;
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 76px;
+
+    color: #FFFFFF;
+}
+input::placeholder {
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 25px;
+    color: #FFFFFF;
+    /* identical to box height, or 156% */
+
+    text-align: center;
+
+    color: #8D929B;
+
+}
+
+input::value {
+
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 25px;
+    /* identical to box height, or 156% */
+
+    text-align: center;
+
+    color: #FFFFFF;
+
+}
+img {
+    position: absolute;
+    width: 521px;
+    height: 324px;
+    left: 754px;
+    top: 88px;
+}
+
