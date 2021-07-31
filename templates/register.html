@@ -1,34 +1,34 @@
 {% extends 'base.html' %}
 {% block title %}
-Логин
+Регистрация
 {% endblock %}
 {% block body %}
 <div class="container mt-5">
   <form method="post">
-    <h1>Вход:</h1>
+    <h1>Регистрация:</h1>
     {% if error == 1 %}
     <div class="error-class">
-      <h3 class="error-text">Проверьте правильность введенного логина или зарегистрируйтесь.</h3>
+      <h3 class="error-text-2">Выбранный вами логин занят!</h3>
     </div>
     <div  class="interval"></div>
     {% endif %}
     {% if error == 2 %}
     <div class="error-class">
-      <h3 class="error-text">Проверьте правильность введенного пароля или зарегистрируйтесь.</h3>
+      <h3 class="error-text-2">Длина пароля должна быть не менее 8 символов!</h3>
     </div>
     <div  class="interval"></div>
     {% endif %}
 
     {% if error == 3 %}
     <div class="error-class">
-      <h3 class="error-text">Нужно авторизоваться или зарегистрироваться дла поиска фильмов.</h3>
+      <h3 class="error-text-2">Пароли не совпадают!</h3>
     </div>
     <div  class="interval"></div>
     {% endif %}
 
     {% if error == 4 %}
     <div class="error-class">
-      <h3 class="error-text">Время вашей сессии истекло. Снова пройдите авторизацию.</h3>
+      <h3 class="error-text">С вашего устройства уже был зарегистрирован аккаунт. Войдите в него.</h3>
     </div>
     <div  class="interval"></div>
     {% endif %}
@@ -49,12 +49,18 @@
       <label for="floatingPassword" class="floating">Пароль</label>
     </div>
     <div  class="interval"></div>
-    <div class="form-floating"><button class="btn-enter" type="submit">Вход</button>
+    <div class="form-floating">
+      <input type="password" class="form-control" name="password-2" id="anotherPassword" placeholder="Повторите пароль">
+      <label for="floatingPassword" class="floating">Пароль, еще раз</label>
     </div>
+    <div  class="interval"></div>
+    <div class="form-floating"><button class="btn-enter" type="submit">Регистрация</button></div>
+    <div  class="interval"></div>
+
   </form>
-  <div  class="interval"></div>
-  <form action="/register" class="form-ot">
-    <div class="form-floating"><input class="btn-non" type="submit" value="Регистрация"></div>
+  <form action="/login" class="form-ot">
+    <div class="form-floating"><input class="btn-non" type="submit" value="Авторизация"></div>
   </form>
+
 </div>
 {% endblock %}

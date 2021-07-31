@@ -23,6 +23,7 @@ body {
 
     color: #FFFFFF;
 
+
 }
 .textgl {
     position: absolute;
@@ -62,17 +63,13 @@ body {
     background: 181818;
 }
 .font-bd {
-    position: absolute;
-    width: 738px;
-    height: 152px;
-    left: 165px;
-    top: 63px;
-
+    text-align: left;
     font-family: Montserrat;
     font-style: normal;
     font-weight: bold;
     font-size: 64px;
     line-height: 76px;
+    width: 60%;
 
     color: #FFFFFF;
 }
@@ -114,3 +111,157 @@ img {
     top: 88px;
 }
 
+.form-floating {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+h1 {
+    text-align: center;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 64px;
+    line-height: 76px;
+    color: white;
+}
+.checkbox mb-3 {
+    margin-left: auto;
+    margin-right: auto;
+    width: 500px;
+}
+
+.btn-enter {
+    margin-left: auto;
+    margin-right: auto;
+    height: 60px;
+    width: 500px;
+    background: linear-gradient(133.9deg, rgba(255, 255, 255, 0) -29.69%, #739EF2 141.09%), #1901AA;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 25px;
+
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    color: #FFFFFF;
+
+
+}
+.floating {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 25px;
+    color: #8D929B;
+}
+
+.form-control {
+
+
+    background: #181818;
+    border: 3px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 25px;
+    /* identical to box height, or 156% */
+    color: #FFFFFF;
+
+}
+.form-control:valid {
+
+
+    background: #181818;
+    border: 3px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 25px;
+    /* identical to box height, or 156% */
+
+    color: #FFFFFF;
+
+}
+
+.error-class {
+    width: 500px;
+    height: 75px;
+
+    background: rgba(255, 0, 0, 0.3);
+    border: 3px solid #FF0000;
+    box-sizing: border-box;
+    border-radius: 10px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+.error-text {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    position: relative;
+    top: 12px;
+
+    left: 10px;
+    color: #FFFFFF;
+
+
+}
+.interval {
+    height: 5px;
+}
+
+.error-text-2 {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 22px;
+    /* identical to box height */
+    position: relative;
+    top: 25px;
+
+    left: 10px;
+    color: #FFFFFF;
+
+
+}
+
+.btn-non {
+    width: 500px;
+    height: 60px;
+    margin-left: auto;
+    margin-right: auto;
+
+    border: 3px solid #FFFFFF;
+    box-sizing: border-box;
+    border-radius: 10px;
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 25px;
+    background: #181818;
+    text-align: center;
+
+    color: #FFFFFF;
+}
+.form-ot {
+    margin-left: auto;
+    margin-right: auto;
+}
