@@ -21,26 +21,8 @@ def shifr(message, check=False):
 @app.route('/', methods=['POST', 'GET'])
 def index():
     if request.method == 'POST':
-        conn = sqlite3.connect('data.db')
-        cur = conn.cursor()
-        text = request.form['fraze']
-        cur.execute(f'SELECT * FROM subtitles WHERE text like "%{text}%"')
-        results = cur.fetchall()
-        res = []
-        for result in results:
-            cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
-            film = cur.fetchone()
-            a = [film[1], result[0], result[1], result[2], film[2], film[3]]
-            """a = f'{film[1]}: {result[0]} --> {result[1]}<p>' \
-                f'Текст фразы: {result[2]}<p>' \
-                f'О фильме: {film[2]}<p>' \
-                f'Рейтинг фильма на Кинопоиске: {film[3]}'"""
-            res.append(a)
-        return render_template('result.html', result=res, num=1)
+        return redirect(url_for('result', search=request.form['zapros']))
     else:
-        device = request.headers.get('User-Agent').lower().find('android')
-        if device != -1:
-            pass
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
         ip = request.remote_addr
@@ -52,8 +34,19 @@ def index():
             return redirect(url_for('login', error=3))
         ses = [int(i) for i in str(res[3]).split('-')]
         ses = datetime.date(ses[0], ses[1], ses[2])
+
         if (a - ses).days == 0:
-            return render_template('index.html')
+            if res[4]:
+                h = res[4].split('; ')
+                history = []
+                for i in h:
+                    i = i.split(': ')
+                    history.append(i)
+                if history == [['']]:
+                    history = None
+            else:
+                history = None
+            return render_template('index.html', history=history)
         else:
             return redirect(url_for('login', error=4))
 
@@ -114,11 +107,56 @@ def register():
 
         pas = shifr(q['password'])
         a = random.getrandbits(64)
-        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?);', (q['login'], pas, ip, today))
+        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?);', (q['login'], pas, ip, today, ''))
         conn.commit()
         return redirect(url_for('index'))
     else:
         return render_template('register.html')
+
+
+@app.route('/result', methods=['POST', 'GET'])
+def result():
+    if request.method == 'GET':
+        conn = sqlite3.connect('data.db')
+        cur = conn.cursor()
+        text = request.args.get('search')
+        if text:
+            text = text.lower()
+        else:
+            text = ''
+        cur.execute(f'SELECT * FROM subtitles WHERE text like "%{text}%"')
+        results = cur.fetchall()
+        res = []
+        for result in results:
+            cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
+            film = cur.fetchone()
+            a = [film[1], result[0], result[1], result[2], film[2], film[3]]
+
+            res.append(a)
+        conn = sqlite3.connect('users.db')
+        cur = conn.cursor()
+        ip = request.remote_addr
+        cur.execute(f'SELECT * FROM users WHERE session = "{ip}"')
+        newhist = cur.fetchall()[0]
+        if newhist[4]:
+            newhist = newhist[4] + f'; {text}: {len(results)}'
+        else:
+            newhist = f'{text}: {len(results)}'
+        cur.execute(f'UPDATE users SET history = "{newhist}" WHERE session = "{ip}"')
+        conn.commit()
+
+        return render_template('result.html', result=res)
+
+    else:
+        pass
+
+
+@app.route('/profile', methods=['POST', 'GET'])
+def profile():
+    if request.method == 'GET':
+        pass
+    else:
+        pass
 
 
 app.run(debug=True, host='0.0.0.0')

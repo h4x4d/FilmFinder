@@ -1,17 +1,41 @@
 {% extends 'base.html' %}
 {% block title %}
-Главная страница
+Главная страница | FilmFinder
 {% endblock %}
 {% block body %}
-<div class="container mt-5">
-    <h1 class="font-bd">Поиск фильма по фразе из него</h1>
-    <form method="post">
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link active" aria-current="page">Главная</a></li>
+        <li class="nav-item"><a href="/liked" class="nav-link">Понравившиеся</a></li>
+        <li class="nav-item"><a href="/profile" class="nav-link">Профиль</a></li>
+      </ul>
+    </header>
+  </div>
+<div class="container-lg">
+    <p class="fs-1 fw-bold">Поиск фильма по фразе из него:</p>
+    <form method="post" class="input-group mb3 input-group-lg ">
 
-        <input type="text" name="fraze" class="frame-linked" placeholder="Фраза из фильма"><br>
-        <input type="submit" class="btn-linked" value="Отправить">
-        <img src="static/Frame.png">
+                <input type="text" name="zapros" class="form-control" placeholder="Текст фразы из фильма..." aria-label="Текст фразы из фильма..." aria-describedby="button-addon2">
+                <button class="btn btn-outline-primary btn-lg" type="submit" id="button-addon2">Поиск</button>
 
     </form>
+    <p class="fs-2 fw-bolder">История:</p>
+    <ul class="list-group">
+        {% if history %}
 
+        {% for r in history %}
+
+        <a href="/result?search={{ r[0] }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" aria-current="true">
+            <h6>{{ r[0] }}</h6>
+            <span class="badge bg-primary rounded-pill">{{ r[1] }}</span>
+        </a>
+
+        {% endfor %}
+        {% endif %}
+        {% if not history %}
+        <h4>Вы еще не делали запросов.</h4>
+        {% endif %}
+    </ul>
 </div>
 {% endblock %}

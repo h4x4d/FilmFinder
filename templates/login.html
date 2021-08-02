@@ -2,59 +2,77 @@
 {% block title %}
 Логин
 {% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+{% endblock %}
 {% block body %}
-<div class="container mt-5">
+<div class="container">
+<main class="form-signin text-center">
   <form method="post">
-    <h1>Вход:</h1>
-    {% if error == 1 %}
-    <div class="error-class">
-      <h3 class="error-text">Проверьте правильность введенного логина или зарегистрируйтесь.</h3>
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <p class="fs-1 fw-bold">Вход:</p>
+            {% if error == 1 %}
+    <div class="alert alert-danger" role="alert">
+      Проверьте правильность введенного логина или зарегистрируйтесь.
     </div>
     <div  class="interval"></div>
     {% endif %}
     {% if error == 2 %}
-    <div class="error-class">
-      <h3 class="error-text">Проверьте правильность введенного пароля или зарегистрируйтесь.</h3>
+    <div class="alert alert-danger" role="alert">
+      Проверьте правильность введенного пароля или зарегистрируйтесь.
     </div>
     <div  class="interval"></div>
     {% endif %}
 
     {% if error == 3 %}
-    <div class="error-class">
-      <h3 class="error-text">Нужно авторизоваться или зарегистрироваться дла поиска фильмов.</h3>
+    <div class="alert alert-danger" role="alert">
+      Нужно авторизоваться или зарегистрироваться дла поиска фильмов.
     </div>
     <div  class="interval"></div>
     {% endif %}
 
     {% if error == 4 %}
-    <div class="error-class">
-      <h3 class="error-text">Время вашей сессии истекло. Снова пройдите авторизацию.</h3>
+    <div class="alert alert-danger" role="alert">
+      Время вашей сессии истекло. Снова пройдите авторизацию.
     </div>
     <div  class="interval"></div>
     {% endif %}
 
     {% if error == 123 %}
-    <div class="error-class">
-      <h3 class="error-text">Произошла непридвиденная ошибка.<br>Попробуйте авторизоваться заново.</h3>
+    <div class="alert alert-danger" role="alert">
+      Произошла непридвиденная ошибка. Попробуйте авторизоваться заново.
     </div>
     <div  class="interval"></div>
     {% endif %}
-    <div class="form-floating" >
-      <input type="text" class="form-control" name="login" id="floatingInput" placeholder="example">
-      <label for="floatingInput" class="floating">Логин</label>
-    </div>
-    <div  class="interval"></div>
-    <div class="form-floating">
-      <input type="password" class="form-control" name="password" id="floatingPassword" placeholder="Ваш пароль">
-      <label for="floatingPassword" class="floating">Пароль</label>
-    </div>
-    <div  class="interval"></div>
-    <div class="form-floating"><button class="btn-enter" type="submit">Вход</button>
-    </div>
+        <div class="form-floating">
+          <input type="text" class="form-control" id="floatingInput" name="login" placeholder="example">
+          <label for="floatingInput">Логин</label>
+          <div class="tab"></div>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Пароль">
+          <label for="floatingPassword">Пароль</label>
+        </div>
+        <div class="tab"></div>
+        <div class="form-floating">
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Вход</button>
+        </div>
+        </div>
+      <div class="tab"></div>
+  </div>
   </form>
-  <div  class="interval"></div>
-  <form action="/register" class="form-ot">
-    <div class="form-floating"><input class="btn-non" type="submit" value="Регистрация"></div>
-  </form>
+
+    <div class="row justify-content-center">
+      <div class="col-md-6">
+        <form action="/register">
+        <div class="form-floating" >
+    <input type="submit"  class="w-100 btn btn-lg btn-outline-secondary " value="Регистрация"/>
+    </div>
+        </form>
+      </div>
+    </div>
+</main>
 </div>
+
 {% endblock %}
