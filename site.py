@@ -1,12 +1,10 @@
 import random
-import telebot
 from flask import Flask, render_template, url_for, request, redirect
 import sqlite3
 import hashlib
 import datetime
 app = Flask(__name__)
 
-bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
 
 
 def shifr(message, check=False):
