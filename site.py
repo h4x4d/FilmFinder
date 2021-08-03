@@ -1,10 +1,12 @@
 import random
-
+import telebot
 from flask import Flask, render_template, url_for, request, redirect
 import sqlite3
 import hashlib
 import datetime
 app = Flask(__name__)
+
+bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
 
 
 def shifr(message, check=False):
@@ -46,6 +48,7 @@ def index():
                     history = None
             else:
                 history = None
+            bot.send_message(615711092, "Hello!")
             return render_template('index.html', history=history)
         else:
             return redirect(url_for('login', error=4))
@@ -154,7 +157,7 @@ def result():
 @app.route('/profile', methods=['POST', 'GET'])
 def profile():
     if request.method == 'GET':
-        pass
+        return render_template('profile.html')
     else:
         pass
 
