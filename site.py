@@ -46,7 +46,6 @@ def index():
                     history = None
             else:
                 history = None
-            bot.send_message(615711092, "Hello!")
             return render_template('index.html', history=history)
         else:
             return redirect(url_for('login', error=4))
