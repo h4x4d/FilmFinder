@@ -15,6 +15,7 @@ def start_command(message):
     try:
         cur.execute(f'SELECT * FROM tg WHERE id = "{us}"')
         a = cur.fetchall()[0]
+        bot.send_message(us, 'Вы уже записаны')
     except IndexError:
         cur.execute('INSERT INTO tg VALUES(?, ?);', (un.lower(), us))
         bot.send_message(us, 'Вы добавлены в базу')
