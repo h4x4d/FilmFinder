@@ -1,2 +1,2 @@
-web: python site.py
-app: python teelgram.py
+web: python tele.py
+app: python telegram.py
