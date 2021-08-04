@@ -1,14 +1,15 @@
 {% extends 'base.html' %}
 {% block title %}
-Логин
+Логин | FilmFinder
 {% endblock %}
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+<script src="{{ url_for('static', filename='js/login.js') }}"></script>
 {% endblock %}
 {% block body %}
 <div class="container">
 <main class="form-signin text-center">
-  <form method="post">
+  <form method="post" id="login">
     <div class="row justify-content-center">
       <div class="col-md-6">
         <p class="fs-1 fw-bold">Вход:</p>
@@ -45,14 +46,21 @@
     </div>
     <div  class="interval"></div>
     {% endif %}
-        <div class="form-floating">
-          <input type="text" class="form-control" id="floatingInput" name="login" placeholder="example">
+        <div id="alert" class="alert alert-primary" role="alert" style="display:none;">
+          Проверочный код уже отправлен вам <a href="https://t.me/film_finder_robot" class="alert-link">нашим ботом</a>.
+      </div>
+        <div class="form-floating" id="log">
+          <input type="text" class="form-control" id="floatingInput" name="login" placeholder=" ">
           <label for="floatingInput">Логин</label>
           <div class="tab"></div>
         </div>
-        <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Пароль">
+        <div class="form-floating" id="password">
+          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder=" ">
           <label for="floatingPassword">Пароль</label>
+        </div>
+        <div class="form-floating" id="code" style="display:none;">
+          <input type="text" class="form-control" id="floatingCode" name="code" placeholder=" ">
+          <label for="floatingPassword">Код из телеграмма</label>
         </div>
         <div class="tab"></div>
         <div class="form-floating">

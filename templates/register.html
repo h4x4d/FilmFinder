@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-Регистрация
+Регистрация | FilmFinder
 {% endblock %}
 {% block body %}
 <div class="container">
@@ -8,7 +8,7 @@
   <form method="post">
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <p class="fs-1 fw-bold">Вход:</p>
+        <p class="fs-1 fw-bold">Регистрация:</p>
             {% if error == 1 %}
     <div class="alert alert-danger" role="alert">
       Выбранный вами логин занят!
@@ -43,17 +43,17 @@
     <div  class="interval"></div>
     {% endif %}
         <div class="form-floating">
-          <input type="text" class="form-control" id="floatingInput" name="login" placeholder="example">
+          <input type="text" class="form-control" id="floatingInput" name="login" placeholder=" ">
           <label for="floatingInput">Логин</label>
           <div class="tab"></div>
         </div>
         <div class="form-floating">
-          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Пароль">
+          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder=" ">
           <label for="floatingPassword">Пароль</label>
         </div>
         <div class="tab"></div>
         <div class="form-floating">
-      <input type="password" class="form-control" name="password-2" id="anotherPassword" placeholder="Повторите пароль">
+      <input type="password" class="form-control" name="password-2" id="anotherPassword" placeholder=" ">
       <label for="floatingPassword" class="floating">Пароль, еще раз</label>
     </div>
         <div class="tab"></div>

@@ -1,6 +1,5 @@
 import telebot
-import sqlite3
-
+import requests
 
 bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
 
@@ -9,19 +8,11 @@ bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
 def start_command(message):
     us = message.chat.id
     un = message.chat.username
-
-    conn = sqlite3.connect('users.db')
-    cur = conn.cursor()
-    try:
-        cur.execute(f'SELECT * FROM tg WHERE id = "{us}"')
-        a = cur.fetchall()[0]
-        bot.send_message(us, 'Вы уже записаны')
-    except IndexError:
-        cur.execute('INSERT INTO tg VALUES(?, ?);', (un.lower(), us))
-        bot.send_message(us, 'Вы добавлены в базу')
-        conn.commit()
-
-
+    res = requests.post(f'http://192.168.0.108:5000/get_tg?username={un}&id={us}').text
+    if res == 'nthx':
+        bot.send_message(us, 'Вы уже записаны в базу, нет нужды добавлять еще раз')
+    elif res == 'thx':
+        bot.send_message(us, 'Ваш айди зарегистирован, можно подключать 2FA')
 
 
 bot.polling()

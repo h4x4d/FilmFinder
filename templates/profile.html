@@ -1,10 +1,106 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+Профиль | FilmFinder
+{% endblock %}
+{% block head %}
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
 
-</body>
-</html>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Главная</a></li>
+        <li class="nav-item"><a href="/liked" class="nav-link">Понравившиеся</a></li>
+        <li class="nav-item"><a href="/profile" class="nav-link active">Профиль</a></li>
+      </ul>
+    </header>
+  </div>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md">
+            <p class="fs-2 fw-bolder">Настройки 2FA:</p>
+            {% if not tg %}
+            <form method="POST" id="2fa">
+
+
+                <div class="alert alert-primary" role="alert" id="successAlert" style="display:none;">
+                      В ваш телеграм отправлена проверочная ссылка!
+                    </div>
+                <div class="alert alert-danger" role="alert" id="errorAlert" style="display:none;">
+
+                    </div>
+                <div class="form-floating">
+
+                      <input type="text" class="form-control" id="userInput" name="tg" placeholder=" ">
+                      <label for="userInput">Телеграм юзернейм (без @)</label>
+                      <div class="tab"></div>
+
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control" id="passInput" name="password" placeholder=" ">
+              <label for="passInput">Пароль</label>
+                <div class="form-floating">
+                    <div class="tab"></div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Получить 2FA код</button>
+
+        </div>
+        </div></form>{% endif %}
+
+            {% if tg %}
+            <form id="offtg"></form>
+                <div class="alert alert-secondary" role="alert">
+                    <input type="hidden" value="{{ tg }}" id="tg_id">
+                    <p class="fs-6">Оповещения и проверочные уведомления в ваш телеграмм (айди: {{ tg }}) уже подключены.</p>
+
+                    <hr><a href="/offtg" class="alert-link">Отключить</a>
+            </div>
+            {% endif %}
+        </div>
+        <div class="col-md">
+            <p class="fs-2 fw-bolder">Смена пароля:</p>
+                <div class="alert alert-primary" role="alert" id="sucAlert" style="display:none;">
+                      В ваш телеграмм отправлен проверочный код!
+                    </div>
+                <div class="alert alert-success" role="alert" id="succAlert" style="display:none;">
+                      В ваш телеграмм отправлен проверочный код!
+                    </div>
+                <div class="alert alert-danger" role="alert" id="errAlert" style="display:none;">
+                    </div>
+            <form id="changepass" method="post">
+
+
+                <div class="form-floating" id="fir-pass">
+
+              <input type="password" class="form-control" id="oldpass" name="oldpass" placeholder=" ">
+              <label for="oldpass">Старый пароль</label>
+              <div class="tab"></div>
+            </div>
+            <div class="form-floating" id="sec-pass">
+              <input type="password" class="form-control" id="newpass" name="pass-1" placeholder="Пароль">
+              <label for="newpass">Пароль</label>
+                <div class="tab"></div>
+            </div>
+                <div class="form-floating" id="thr-pass">
+              <input type="password" class="form-control" id="newpass-2" name="pass-2" placeholder="example">
+              <label for="newpass-2">Пароль, еще раз</label>
+              <div class="tab"></div>
+            </div>
+                <div class="form-floating" id="auth-code" style="display:none;">
+              <input type="text" class="form-control" id="code-auth" name="pass-2" placeholder="example">
+              <label for="code-auth">Код из телеграмма</label>
+              <div class="tab"></div>
+            </div>
+            <button class="w-100 btn btn-lg btn-primary" type="submit" id="subm-pass">Сменить пароль</button>
+            </form>
+        </div>
+        <div class="col-md">
+            <p class="fs-2 fw-bolder">Другие настройки:</p>
+            <form id="clearhsitory"><button class="w-100 btn btn-lg btn-outline-warning" type="submit">Очистить историю</button></form>
+            <div class="tab"></div>
+            <form id="clearliked"><button class="w-100 btn btn-lg btn-outline-danger" type="submit">Очистить понравившиеся</button></form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="ru">
 <head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -8,7 +9,6 @@
           integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
           crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
-
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>

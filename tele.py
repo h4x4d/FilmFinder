@@ -22,6 +22,7 @@ def start_command(message):
         conn.commit()
 
 
+bot.send_message('615711092', '123')
 
 
 bot.polling()
