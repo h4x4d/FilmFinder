@@ -338,4 +338,4 @@ def offtg():
     return redirect(url_for('profile'))
 
 
-app.run(debug=True)
+app.run()
