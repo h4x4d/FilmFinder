@@ -265,7 +265,7 @@ def confirm():
     tg = request.args.get('tg')
     conn = sqlite3.connect('users.db')
     cur = conn.cursor()
-    cur.execute(f'UPDATE users SET telegram = "{tg}" WHERE password = "{id_pass}"')
+    cur.execute(f'UPDATE users SET tgid = "{tg}" WHERE password = "{id_pass}"')
     conn.commit()
     return render_template('confirm.html')
 
@@ -332,7 +332,7 @@ def offtg():
     ip = request.remote_addr
     conn = sqlite3.connect('users.db')
     cur = conn.cursor()
-    cur.execute(f'UPDATE users SET telegram = "" WHERE session = "{ip}"')
+    cur.execute(f'UPDATE users SET tgid = "" WHERE session = "{ip}"')
     conn.commit()
     return redirect(url_for('profile'))
 
