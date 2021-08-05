@@ -73,3 +73,75 @@ $(document).ready(function() {
 	});
 
 });
+$(document).ready(function() {
+
+	$('#clearhsitory').on('submit', function(event) {
+
+		$.ajax({
+			data : {
+				type : 'clearhistory'
+			},
+			type : 'POST',
+			url : '/profile_act'
+		})
+		.done(function(data) {
+
+			if (data.delete) {
+			    $('#erroAlert').text(data.delete).show();
+			}
+
+		});
+
+		event.preventDefault();
+
+	});
+
+});
+$(document).ready(function() {
+
+	$('#clearliked').on('submit', function(event) {
+
+		$.ajax({
+			data : {
+				type : 'clearliked'
+			},
+			type : 'POST',
+			url : '/profile_act'
+		})
+		.done(function(data) {
+
+			if (data.delete) {
+			    $('#erroAlert').text(data.delete).show();
+			}
+
+		});
+
+		event.preventDefault();
+
+	});
+
+});
+$(document).ready(function() {
+
+	$('#exit').on('submit', function(event) {
+
+		$.ajax({
+			data : {
+				type : 'exit'
+			},
+			type : 'POST',
+			url : '/profile_act'
+		})
+		.done(function(data) {
+
+			if (data.delete) {
+			    window.location.href = "/login";
+			}
+
+		});
+
+		event.preventDefault();
+
+	});
+
+});

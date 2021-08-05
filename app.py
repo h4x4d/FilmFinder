@@ -60,7 +60,6 @@ def login():
             cur = conn.cursor()
             log = request.form['login']
             pas = shifr(request.form['password'])
-            print(request.form)
             if request.form['code']:
                 c = int(request.form['code'])
                 try:
@@ -72,7 +71,6 @@ def login():
                     cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
                     cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
                     conn.commit()
-                    print('text')
                     return jsonify({'login': True})
                 except IndexError:
                     return render_template('login.html', error=6)
@@ -85,11 +83,11 @@ def login():
                 return render_template('login.html', error=1)
 
             if user[1] == pas:
-                if user[5]:
+                if user[6]:
 
                     code = random.randint(10000, 99999)
                     bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
-                    bot.send_message(user[5], f'Код для входа на сайт: {code}')
+                    bot.send_message(user[6], f'Код для входа на сайт: {code}')
                     cur.execute(f'INSERT INTO requests VALUES (?, ?, ?, ?)', ['login', log, code, ''])
                     conn.commit()
                     return jsonify({'code': 'sent'})
@@ -97,7 +95,7 @@ def login():
                     cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
                     cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
                     conn.commit()
-                    return redirect(url_for('index'))
+                    return jsonify({'index': True})
             else:
                 return render_template('login.html', error=2)
         except Exception as e:
@@ -132,7 +130,7 @@ def register():
         today = datetime.date.today()
 
         pas = shifr(q['password'])
-        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?);', (q['login'], pas, ip, today, '', ''))
+        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?);', (q['login'], pas, ip, today, '', '', ''))
         conn.commit()
         return redirect(url_for('index'))
     else:
@@ -188,7 +186,8 @@ def result():
             return redirect(url_for('login', error=4))
 
     else:
-        pass
+        print(request.form)
+        return jsonify({'send': '1'})
 
 
 @app.route('/profile', methods=['POST', 'GET'])
@@ -207,8 +206,8 @@ def profile():
         ses = datetime.date(ses[0], ses[1], ses[2])
 
         if (a - ses).days == 0:
-            if res[5]:
-                return render_template('profile.html', tg=res[5])
+            if res[6]:
+                return render_template('profile.html', tg=res[6])
             else:
                 return render_template('profile.html', tg=0)
         else:
@@ -312,9 +311,9 @@ def passchange():
         num = random.randint(10000, 99999)
         if us:
             if newp == newp2 and len(another) > 7:
-                if us[5]:
+                if us[6]:
                     bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
-                    bot.send_message(us[5], f'Проверочный код для смены пароля: {num}')
+                    bot.send_message(us[6], f'Проверочный код для смены пароля: {num}')
                     cur.execute(f'INSERT INTO requests VALUES(?, ?, ?, ?)', ['changepass', us[0], num, newp])
                     conn.commit()
                     return jsonify({'alert': 'В ваш телеграм отправлен проверочный код'})
@@ -338,4 +337,31 @@ def offtg():
     return redirect(url_for('profile'))
 
 
-app.run()
+@app.route('/profile_act', methods=['POST'])
+def setting():
+    type = request.form['type']
+    if type == 'clearhistory':
+        ip = request.remote_addr
+        conn = sqlite3.connect('users.db')
+        cur = conn.cursor()
+        cur.execute(f'UPDATE users SET history = "" WHERE session = "{ip}"')
+        conn.commit()
+        return jsonify({'delete': 'История поиска очищена'})
+    if type == 'clearliked':
+        ip = request.remote_addr
+        conn = sqlite3.connect('users.db')
+        cur = conn.cursor()
+        cur.execute(f'UPDATE users SET liked = "" WHERE session = "{ip}"')
+        conn.commit()
+        return jsonify({'delete': 'Ваши понравившиеся очищены'})
+    if type == 'exit':
+        ip = request.remote_addr
+        conn = sqlite3.connect('users.db')
+        cur = conn.cursor()
+        cur.execute(f'UPDATE users SET session = "" WHERE session = "{ip}"')
+        conn.commit()
+        return jsonify({'delete': 'Выход успешен'})
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')

@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% block head %}
+<script src="{{ url_for('static', filename='js/result.js') }}"></script>
 {% endblock %}
 {% block title %}
 Результаты | FilmFinder
@@ -19,16 +20,21 @@
 
     <p class="fs-1 fw-bold">Результаты поиска:</p>
     {% if result %}
-
+    {% set a = {'num': 1} %}
     {% for r in result %}
     <p class="fs-2 fw-bold">{{ r[0] }}</p>
     <p class="fs-3">{{ r[1] + ' 🠖 ' + r[2] }}</p>
     <p class="fs-4">{{ 'Текст фразы: ' + r[3] }}</p>
     <p class="fs-5 fw-light">{{ 'О фильме: ' + r[4] }}</p>
-    <hr>
+
     <form method="post" name="{{ r[0] }}">
-        <button type="submit" class="btn btn-outline-secondary" name="{{ r[0] }}">Secondary</button>
+        <input value="{{ r[0] }}" id="hidden_name" type="hidden" name="text">
+
+        <button type="submit" class="btn btn-outline-secondary" id="nsubm" name="hid-btn" style="display:none;">Добавлено в понравившиеся</button>
+        <button type="submit" class="btn btn-secondary" id="subm" name="btn">Добавить в понравившиеся</button>
         </form>
+    {% if a.update({'num': a.num + 1}) %} {% endif %}
+    <hr>
     {% endfor %}
     {% endif %}
     {% if not result %}

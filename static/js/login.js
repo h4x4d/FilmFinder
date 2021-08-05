@@ -21,7 +21,10 @@ $(document).ready(function() {
 				$('#password').hide();
 			}
 			if (data.login) {
-			    window.location.href = "http://192.168.0.108:5000/";
+			    window.location.href = "/";
+			}
+			if (data.index) {
+			    window.location.href = "/";
 			}
 		});
 
