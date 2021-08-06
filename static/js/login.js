@@ -14,7 +14,7 @@ $(document).ready(function() {
 		.done(function(data) {
 
 			if (data.code) {
-				$('#alert').show();
+			    $('#errAlert').hide();
 				$('#alert').show();
 				$('#code').show();
 				$('#log').hide();

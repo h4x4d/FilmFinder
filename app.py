@@ -131,7 +131,7 @@ def register():
         today = datetime.date.today()
 
         pas = shifr(q['password'])
-        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?);', (q['login'], pas, ip, today, '', '', ''))
+        cur.execute('INSERT INTO users VALUES(?, ?, ?, ?, ?, ?, ?, ?);', (q['login'], pas, ip, today, '', '', '', None))
         conn.commit()
         return redirect(url_for('index'))
     else:
@@ -323,7 +323,7 @@ def liked():
     if (a - ses).days == 0:
         cur.execute(f'SELECT * FROM liked WHERE userId = "{res[7]}"')
         likes = cur.fetchone()
-        if not likes[2]:
+        if not likes:
             return render_template('liked.html', result=None, like=[])
         else:
             likes = likes[2].split('; ')
