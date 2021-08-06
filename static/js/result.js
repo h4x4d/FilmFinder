@@ -1,12 +1,9 @@
 $(document).ready(function() {
 
 	$('form').on('submit', function(event) {
-	    if (event.currentTarget.name) {
-	        console.log();
-	    }
 		$.ajax({
 			data : {
-				name : event.currentTarget.name,
+				id : event.currentTarget.name,
 			},
 			type : 'POST',
 			url : '/result'
@@ -15,8 +12,34 @@ $(document).ready(function() {
 
 
 			if (data.send) {
-				$('#nsubm').show();
-				$('#subm').hide();
+			    var names =  document.querySelectorAll('#add' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='none';
+                }
+                var names =  document.querySelectorAll('#add4' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='none';
+                }
+                var names =  document.querySelectorAll('#added' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='inline';
+                }
+			}
+			if (data.notsend) {
+			    var names =  document.querySelectorAll('#add' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='inline';
+                }
+                var names =  document.querySelectorAll('#added' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='none';
+
+                }
+                var names =  document.querySelectorAll('#add4d' + event.currentTarget.name);
+			    for (let i = 0; i < names.length; i++) {
+                    names[i].style.display='none';
+
+                }
 			}
 
 		});

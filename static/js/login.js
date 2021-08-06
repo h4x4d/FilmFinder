@@ -26,6 +26,9 @@ $(document).ready(function() {
 			if (data.index) {
 			    window.location.href = "/";
 			}
+			if (data.error) {
+			    $('#errAlert').text(data.error).show();
+			}
 		});
 
 		event.preventDefault();

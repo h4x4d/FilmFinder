@@ -6,7 +6,7 @@ import datetime
 import telebot
 
 app = Flask(__name__)
-
+add = []
 
 def shifr(message, check=False):
     message = hashlib.sha256(message.encode()).hexdigest()
@@ -70,17 +70,18 @@ def login():
 
                     cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
                     cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
+                    cur.execute(f'DELETE FROM requests WHERE user = "{log}";')
                     conn.commit()
                     return jsonify({'login': True})
                 except IndexError:
-                    return render_template('login.html', error=6)
+                    return jsonify({'error': 'Неверный код из телеграмма.'})
             ip = request.remote_addr
             today = datetime.date.today()
             try:
                 cur.execute(f'SELECT * FROM users WHERE login = "{log}"')
                 user = cur.fetchall()[0]
             except IndexError:
-                return render_template('login.html', error=1)
+                return jsonify({'error': 'Проверьте правильность введенного логина или зарегистрируйтесь.'})
 
             if user[1] == pas:
                 if user[6]:
@@ -97,9 +98,9 @@ def login():
                     conn.commit()
                     return jsonify({'index': True})
             else:
-                return render_template('login.html', error=2)
+                return jsonify({'error': 'Проверьте правильность введенного пароля или зарегистрируйтесь.'})
         except Exception as e:
-            return render_template('login.html', error=123)
+            return jsonify({'error': 'Произошла непридвиденная ошибка. Попробуйте авторизоваться заново.'})
     else:
         err = request.args.get('error')
         if err:
@@ -166,7 +167,8 @@ def result():
             for result in results:
                 cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
                 film = cur.fetchone()
-                a = [film[1], result[0], result[1], result[2], film[2], film[3]]
+
+                a = [film[1], result[0], result[1], result[2], film[2], film[3], str(film[0])]
 
                 res.append(a)
             conn = sqlite3.connect('users.db')
@@ -174,20 +176,54 @@ def result():
             ip = request.remote_addr
             cur.execute(f'SELECT * FROM users WHERE session = "{ip}"')
             newhist = cur.fetchall()[0]
+            cur.execute(f'SELECT * FROM liked WHERE userId = "{newhist[7]}"')
+            like = cur.fetchone()
+            if not like:
+                like = []
+            else:
+                like = like[2].split('; ')
             if newhist[4]:
                 newhist = newhist[4] + f'; {text}: {len(results)}'
             else:
                 newhist = f'{text}: {len(results)}'
+            cur.execute(f'SELECT * FROM liked WHERE userId = "{ip}"')
             cur.execute(f'UPDATE users SET history = "{newhist}" WHERE session = "{ip}"')
             conn.commit()
 
-            return render_template('result.html', result=res)
+            return render_template('result.html', result=res, like=like)
         else:
             return redirect(url_for('login', error=4))
 
     else:
-        print(request.form)
-        return jsonify({'send': '1'})
+        id = request.form['id']
+        conn = sqlite3.connect('users.db')
+        cur = conn.cursor()
+        ip = request.remote_addr
+        cur.execute(f'SELECT * FROM users WHERE session = "{ip}"')
+        res = cur.fetchone()
+        us = res[7]
+        cur.execute(f'SELECT * FROM liked WHERE userId = "{us}"')
+        res = cur.fetchone()
+        if not res:
+            cur.execute(f'INSERT INTO liked VALUES(?, ?, ?)', (None, us, f'{id}'))
+            conn.commit()
+            return jsonify({'send': '1'})
+        elif not res[2]:
+            cur.execute(f'UPDATE liked SET filmIds = "{id}" WHERE userId = "{us}"')
+            conn.commit()
+            return jsonify({'send': '1'})
+        else:
+            if id not in res[2].split('; '):
+                cur.execute(f'UPDATE liked SET filmIds = "{res[2] + "; " + id}" WHERE userId = "{us}"')
+                conn.commit()
+                return jsonify({'send': '1'})
+            else:
+                films = res[2].split('; ')
+                films.remove(id)
+                films = '; '.join(films)
+                cur.execute(f'UPDATE liked SET filmIds = "{films}" WHERE userId = "{us}"')
+                conn.commit()
+                return jsonify({'notsend': '1'})
 
 
 @app.route('/profile', methods=['POST', 'GET'])
@@ -249,7 +285,7 @@ def process():
 
                 tg = cur.fetchone()
                 bot.send_message(tg[0], f'Проверочная ссылка, для подтверждения 2FA Доступа: '
-                                        f'film-from-text.herokuapp.com/confirm?id={pas}&tg={tg[0]}')
+                                        f'http://192.168.0.108:5000/confirm?id={pas}&tg={tg[0]}')
                 return jsonify({'send': True})
             except TypeError:
                 return jsonify({'error': 'Вы не отправляли сообщения нашему боту.'})
@@ -285,8 +321,21 @@ def liked():
     ses = datetime.date(ses[0], ses[1], ses[2])
 
     if (a - ses).days == 0:
-        # here #
-        pass
+        cur.execute(f'SELECT * FROM liked WHERE userId = "{res[7]}"')
+        likes = cur.fetchone()
+        if not likes[2]:
+            return render_template('liked.html', result=None, like=[])
+        else:
+            likes = likes[2].split('; ')
+            conn = sqlite3.connect('data.db')
+            cur = conn.cursor()
+            cur.execute(f'SELECT * FROM films WHERE id in ({", ".join(likes)})')
+            liked = cur.fetchall()
+            for j, i in enumerate(liked):
+                liked[j] = [str(i[0]), i[1], i[2]]
+
+            print(likes)
+            return render_template('liked.html', result=liked, like=likes)
     else:
         return redirect(url_for('login', error=4))
 
@@ -298,11 +347,17 @@ def passchange():
     newp = shifr(request.form['pass'])
     oldp = shifr(request.form['oldpass'])
     if request.form['code']:
-        code = request.form['code']
-        cur.execute(f'SELECT * FROM requests WHERE code = "{code}" AND other = "{newp}"')
-        cur.execute(f'UPDATE users SET password = "{newp}" WHERE password = "{oldp}"')
-        conn.commit()
-        return jsonify({'success': 'Пароль успешно сменен!'})
+        try:
+            code = request.form['code']
+            cur.execute(f'SELECT * FROM requests WHERE code = "{code}" AND other = "{newp}"')
+            a = cur.fetchall()[0]
+            cur.execute(f'UPDATE users SET password = "{newp}" WHERE password = "{oldp}"')
+            cur.execute(f'DELETE FROM requests WHERE other = "{newp}";')
+            conn.commit()
+            return jsonify({'success': 'Пароль успешно сменен!'})
+        except Exception as e:
+            return jsonify({'error': 'Введенный код неверен!'})
+
     else:
         newp2 = shifr(request.form['pass_2'])
         another = request.form['pass_2']
@@ -351,7 +406,9 @@ def setting():
         ip = request.remote_addr
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
-        cur.execute(f'UPDATE users SET liked = "" WHERE session = "{ip}"')
+        cur.execute(f'SELECT * FROM users WHERE session = "{ip}"')
+        s = cur.fetchone()
+        cur.execute(f'UPDATE liked SET FilmIds = "" WHERE userId = "{s[7]}"')
         conn.commit()
         return jsonify({'delete': 'Ваши понравившиеся очищены'})
     if type == 'exit':

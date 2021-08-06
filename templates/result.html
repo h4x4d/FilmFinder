@@ -27,11 +27,15 @@
     <p class="fs-4">{{ 'Текст фразы: ' + r[3] }}</p>
     <p class="fs-5 fw-light">{{ 'О фильме: ' + r[4] }}</p>
 
-    <form method="post" name="{{ r[0] }}">
-        <input value="{{ r[0] }}" id="hidden_name" type="hidden" name="text">
-
-        <button type="submit" class="btn btn-outline-secondary" id="nsubm" name="hid-btn" style="display:none;">Добавлено в понравившиеся</button>
-        <button type="submit" class="btn btn-secondary" id="subm" name="btn">Добавить в понравившиеся</button>
+    <form method="post" name="{{ r[6] }}" id="{{  'form' + r[6] }}">
+        {% if r[6] in like %}
+        <button type="submit" class="btn btn-outline-secondary" id="{{ 'add4d' + r[6] }}" name="hid-btn">Добавлено в понравившиеся</button>
+        {% endif %}
+        {% if r[6] not in like %}
+        <button type="submit" class="btn btn-secondary" id="{{ 'add4' + r[6] }}" name="btn">Добавить в понравившиеся</button>
+        {% endif %}
+        <button type="submit" class="btn btn-outline-secondary" id="{{ 'added' + r[6] }}" name="hid-btn" style="display:none;">Добавлено в понравившиеся</button>
+        <button type="submit" class="btn btn-secondary" id="{{ 'add' + r[6] }}" name="btn" style="display:none;">Добавить в понравившиеся</button>
         </form>
     {% if a.update({'num': a.num + 1}) %} {% endif %}
     <hr>

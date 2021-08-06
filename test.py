@@ -1,7 +1,7 @@
 import datetime
 import sqlite3
 
-s = datetime.date.today()
-print(str(s))
-s = datetime.date()
-print(s)
+conn = sqlite3.connect('data.db')
+cur = conn.cursor()
+cur.execute(f'SELECT * FROM films WHERE id in ({", ".join(["1", "2"])})')
+print(cur.fetchall())

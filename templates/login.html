@@ -13,12 +13,10 @@
     <div class="row justify-content-center">
       <div class="col-md-6">
         <p class="fs-1 fw-bold">Вход:</p>
-            {% if error == 1 %}
-    <div class="alert alert-danger" role="alert">
+    <div class="alert alert-danger" role="alert" id="errAlert" style="display:none;">
       Проверьте правильность введенного логина или зарегистрируйтесь.
     </div>
     <div  class="interval"></div>
-    {% endif %}
     {% if error == 2 %}
     <div class="alert alert-danger" role="alert">
       Проверьте правильность введенного пароля или зарегистрируйтесь.
