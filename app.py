@@ -4,9 +4,11 @@ import sqlite3
 import hashlib
 import datetime
 import telebot
+from waitress import serve
 
 app = Flask(__name__)
 add = []
+
 
 def shifr(message, check=False):
     message = hashlib.sha256(message.encode()).hexdigest()
@@ -154,7 +156,7 @@ def result():
         ses = datetime.date(ses[0], ses[1], ses[2])
 
         if (a - ses).days == 0:
-            conn = sqlite3.connect('data.db')
+            conn = sqlite3.connect('date.db')
             cur = conn.cursor()
             text = request.args.get('search')
             if text:
@@ -168,7 +170,7 @@ def result():
                 cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
                 film = cur.fetchone()
 
-                a = [film[1], result[0], result[1], result[2], film[2], film[3], str(film[0])]
+                a = [film[1], result[0], result[1], result[2], film[2], None, str(film[0])]
 
                 res.append(a)
             conn = sqlite3.connect('users.db')
@@ -195,7 +197,7 @@ def result():
             return redirect(url_for('login', error=4))
 
     else:
-        id = request.form['id']
+        usid = request.form['id']
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
         ip = request.remote_addr
@@ -205,21 +207,21 @@ def result():
         cur.execute(f'SELECT * FROM liked WHERE userId = "{us}"')
         res = cur.fetchone()
         if not res:
-            cur.execute(f'INSERT INTO liked VALUES(?, ?, ?)', (None, us, f'{id}'))
+            cur.execute(f'INSERT INTO liked VALUES(?, ?, ?)', (None, us, f'{usid}'))
             conn.commit()
             return jsonify({'send': '1'})
         elif not res[2]:
-            cur.execute(f'UPDATE liked SET filmIds = "{id}" WHERE userId = "{us}"')
+            cur.execute(f'UPDATE liked SET filmIds = "{usid}" WHERE userId = "{us}"')
             conn.commit()
             return jsonify({'send': '1'})
         else:
-            if id not in res[2].split('; '):
-                cur.execute(f'UPDATE liked SET filmIds = "{res[2] + "; " + id}" WHERE userId = "{us}"')
+            if usid not in res[2].split('; '):
+                cur.execute(f'UPDATE liked SET filmIds = "{res[2] + "; " + usid}" WHERE userId = "{us}"')
                 conn.commit()
                 return jsonify({'send': '1'})
             else:
                 films = res[2].split('; ')
-                films.remove(id)
+                films.remove(usid)
                 films = '; '.join(films)
                 cur.execute(f'UPDATE liked SET filmIds = "{films}" WHERE userId = "{us}"')
                 conn.commit()
@@ -327,14 +329,12 @@ def liked():
             return render_template('liked.html', result=None, like=[])
         else:
             likes = likes[2].split('; ')
-            conn = sqlite3.connect('data.db')
+            conn = sqlite3.connect('date.db')
             cur = conn.cursor()
             cur.execute(f'SELECT * FROM films WHERE id in ({", ".join(likes)})')
             liked = cur.fetchall()
             for j, i in enumerate(liked):
                 liked[j] = [str(i[0]), i[1], i[2]]
-
-            print(likes)
             return render_template('liked.html', result=liked, like=likes)
     else:
         return redirect(url_for('login', error=4))
@@ -421,4 +421,4 @@ def setting():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0')
+    serve(app, host='0.0.0.0', port=8080)
