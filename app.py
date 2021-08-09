@@ -66,15 +66,17 @@ def login():
                 c = int(request.form['code'])
                 try:
                     cur.execute(f'SELECT * FROM requests WHERE user = "{log}" and code = "{c}" and  name = "login"')
-                    user = cur.fetchall()[0]
-                    ip = request.remote_addr
-                    today = datetime.date.today()
+                    if cur.fetchone():
+                        ip = request.remote_addr
+                        today = datetime.date.today()
 
-                    cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
-                    cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
-                    cur.execute(f'DELETE FROM requests WHERE user = "{log}";')
-                    conn.commit()
-                    return jsonify({'login': True})
+                        cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
+                        cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
+                        cur.execute(f'DELETE FROM requests WHERE user = "{log}";')
+                        conn.commit()
+                        return jsonify({'login': True})
+                    else:
+                        return jsonify({'error': 'Неверный код из телеграмма.'})
                 except IndexError:
                     return jsonify({'error': 'Неверный код из телеграмма.'})
             ip = request.remote_addr
@@ -102,6 +104,7 @@ def login():
             else:
                 return jsonify({'error': 'Проверьте правильность введенного пароля или зарегистрируйтесь.'})
         except Exception as e:
+            print(e)
             return jsonify({'error': 'Произошла непридвиденная ошибка. Попробуйте авторизоваться заново.'})
     else:
         err = request.args.get('error')
@@ -166,11 +169,11 @@ def result():
             cur.execute(f'SELECT * FROM subtitles WHERE text like "%{text}%"')
             results = cur.fetchall()
             res = []
-            for result in results:
-                cur.execute(f'SELECT * FROM films WHERE id = {result[4]}')
+            for rt in results:
+                cur.execute(f'SELECT * FROM films WHERE id = {rt[4]}')
                 film = cur.fetchone()
 
-                a = [film[1], result[0], result[1], result[2], film[2], None, str(film[0])]
+                a = [film[1], rt[0], rt[1], rt[2], film[2], None, str(film[0])]
 
                 res.append(a)
             conn = sqlite3.connect('users.db')
@@ -332,10 +335,10 @@ def liked():
             conn = sqlite3.connect('date.db')
             cur = conn.cursor()
             cur.execute(f'SELECT * FROM films WHERE id in ({", ".join(likes)})')
-            liked = cur.fetchall()
-            for j, i in enumerate(liked):
-                liked[j] = [str(i[0]), i[1], i[2]]
-            return render_template('liked.html', result=liked, like=likes)
+            ld = cur.fetchall()
+            for j, i in enumerate(ld):
+                ld[j] = [str(i[0]), i[1], i[2]]
+            return render_template('liked.html', result=ld, like=likes)
     else:
         return redirect(url_for('login', error=4))
 
@@ -350,12 +353,15 @@ def passchange():
         try:
             code = request.form['code']
             cur.execute(f'SELECT * FROM requests WHERE code = "{code}" AND other = "{newp}"')
-            a = cur.fetchall()[0]
-            cur.execute(f'UPDATE users SET password = "{newp}" WHERE password = "{oldp}"')
-            cur.execute(f'DELETE FROM requests WHERE other = "{newp}";')
-            conn.commit()
-            return jsonify({'success': 'Пароль успешно сменен!'})
+            if cur.fetchone():
+                cur.execute(f'UPDATE users SET password = "{newp}" WHERE password = "{oldp}"')
+                cur.execute(f'DELETE FROM requests WHERE other = "{newp}";')
+                conn.commit()
+                return jsonify({'success': 'Пароль успешно сменен!'})
+            else:
+                return jsonify({'error': 'Введенный код неверен!'})
         except Exception as e:
+            print(e)
             return jsonify({'error': 'Введенный код неверен!'})
 
     else:
@@ -394,15 +400,15 @@ def offtg():
 
 @app.route('/profile_act', methods=['POST'])
 def setting():
-    type = request.form['type']
-    if type == 'clearhistory':
+    t = request.form['type']
+    if t == 'clearhistory':
         ip = request.remote_addr
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
         cur.execute(f'UPDATE users SET history = "" WHERE session = "{ip}"')
         conn.commit()
         return jsonify({'delete': 'История поиска очищена'})
-    if type == 'clearliked':
+    if t == 'clearliked':
         ip = request.remote_addr
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
@@ -411,7 +417,7 @@ def setting():
         cur.execute(f'UPDATE liked SET FilmIds = "" WHERE userId = "{s[7]}"')
         conn.commit()
         return jsonify({'delete': 'Ваши понравившиеся очищены'})
-    if type == 'exit':
+    if t == 'exit':
         ip = request.remote_addr
         conn = sqlite3.connect('users.db')
         cur = conn.cursor()
@@ -421,4 +427,4 @@ def setting():
 
 
 if __name__ == '__main__':
-    serve(app, host='0.0.0.0', port=8080)
+    serve(app, host='0.0.0.0', port=80)
