@@ -290,7 +290,7 @@ def process():
 
                 tg = cur.fetchone()
                 bot.send_message(tg[0], f'Проверочная ссылка, для подтверждения 2FA Доступа: '
-                                        f'http://192.168.0.108/confirm?id={pas}&tg={tg[0]}')
+                                        f'https://film-from-text.herokuapp.com/confirm?id={pas}&tg={tg[0]}')
                 return jsonify({'send': True})
             except TypeError:
                 return jsonify({'error': 'Вы не отправляли сообщения нашему боту.'})
