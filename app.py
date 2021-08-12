@@ -4,7 +4,6 @@ import sqlite3
 import hashlib
 import datetime
 import telebot
-from waitress import serve
 
 app = Flask(__name__)
 add = []
