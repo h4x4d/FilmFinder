@@ -289,7 +289,7 @@ def process():
 
                 tg = cur.fetchone()
                 bot.send_message(tg[0], f'Проверочная ссылка, для подтверждения 2FA Доступа: '
-                                        f'https://film-from-text.herokuapp.com/confirm?id={pas}&tg={tg[0]}')
+                                        f'http://18.118.209.62/confirm?id={pas}&tg={tg[0]}')
                 return jsonify({'send': True})
             except TypeError:
                 return jsonify({'error': 'Вы не отправляли сообщения нашему боту.'})
@@ -332,6 +332,7 @@ def liked():
         else:
             likes = likes[2].split('; ')
             conn = sqlite3.connect('date.db')
+
             cur = conn.cursor()
             cur.execute(f'SELECT * FROM films WHERE id in ({", ".join(likes)})')
             ld = cur.fetchall()

@@ -23,7 +23,7 @@
     {% set a = {'num': 1} %}
     {% for r in result %}
     <p class="fs-2 fw-bold">{{ r[0] }}</p>
-    <p class="fs-3">{{ r[1] + ' 🠖 ' + r[2] }}</p>
+    <div class="fs-3">{{ r[1] }} <i class="bi bi-arrow-right"></i> {{ r[2] }}</div>
     <p class="fs-4">{{ 'Текст фразы: ' + r[3] }}</p>
     <p class="fs-5 fw-light">{{ 'О фильме: ' + r[4] }}</p>
 
