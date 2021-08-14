@@ -4,7 +4,9 @@ import sqlite3
 import hashlib
 import datetime
 import telebot
+import os
 
+token = os.getenv('TELEGRAMBOT_TOKEN')
 app = Flask(__name__)
 add = []
 
@@ -284,7 +286,7 @@ def process():
 
         if user[1] == pas:
             try:
-                bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
+                bot = telebot.TeleBot(token)
                 cur.execute(f'SELECT * FROM tg WHERE username = "{us}"')
 
                 tg = cur.fetchone()
@@ -373,7 +375,7 @@ def passchange():
         if us:
             if newp == newp2 and len(another) > 7:
                 if us[6]:
-                    bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
+                    bot = telebot.TeleBot(token)
                     bot.send_message(us[6], f'Проверочный код для смены пароля: {num}')
                     cur.execute(f'INSERT INTO requests VALUES(?, ?, ?, ?)', ['changepass', us[0], num, newp])
                     conn.commit()
