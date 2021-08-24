@@ -1,10 +1,12 @@
 import random
+import pymorphy2
 from flask import Flask, render_template, url_for, request, redirect, jsonify
 import sqlite3
 import hashlib
 import datetime
 import telebot
 import os
+from autocorrect import Speller
 
 token = os.getenv('TELEGRAMBOT_TOKEN')
 app = Flask(__name__)
@@ -92,12 +94,16 @@ def login():
                 if user[6]:
 
                     code = random.randint(10000, 99999)
-                    bot = telebot.TeleBot('1925289738:AAFQOPCVTlknNihpYd44ertOAVnXqvLsD3E')
+                    bot = telebot.TeleBot(token)
                     bot.send_message(user[6], f'Код для входа на сайт: {code}')
                     cur.execute(f'INSERT INTO requests VALUES (?, ?, ?, ?)', ['login', log, code, ''])
                     conn.commit()
                     return jsonify({'code': 'sent'})
                 else:
+                    cur.execute(f'SELECT * FROM users WHERE session = {ip}')
+                    ips = cur.fetchall()
+                    for i in ips:
+                        cur.execute(f'UPDATE users SET session = "" WHERE login = "{i[0]}"')
                     cur.execute(f'UPDATE users SET session = "{ip}" WHERE login = "{log}"')
                     cur.execute(f'UPDATE users SET sestime = "{str(today)}" WHERE login = "{log}"')
                     conn.commit()
@@ -163,12 +169,22 @@ def result():
             conn = sqlite3.connect('date.db')
             cur = conn.cursor()
             text = request.args.get('search')
+            spell = Speller(lang='ru')
+            morph = pymorphy2.MorphAnalyzer()
             if text:
                 text = text.lower()
+                text = text.split()
+                text = [spell(i) for i in text]
+                mes = []
+                for i in text:
+                    a = morph.parse(i)[0].normal_form
+                    a = f'text LIKE "%{a}%"'
+                    mes.append(a)
+                text = 'SELECT * FROM subtitles WHERE ' + ' AND '.join(mes)
+                cur.execute(text)
+                results = cur.fetchall()
             else:
-                text = ''
-            cur.execute(f'SELECT * FROM subtitles WHERE text like "%{text}%"')
-            results = cur.fetchall()
+                results = []
             res = []
             for rt in results:
                 cur.execute(f'SELECT * FROM films WHERE id = {rt[4]}')
@@ -188,11 +204,11 @@ def result():
                 like = []
             else:
                 like = like[2].split('; ')
+            text = request.args.get('search')
             if newhist[4]:
                 newhist = newhist[4] + f'; {text}: {len(results)}'
             else:
                 newhist = f'{text}: {len(results)}'
-            cur.execute(f'SELECT * FROM liked WHERE userId = "{ip}"')
             cur.execute(f'UPDATE users SET history = "{newhist}" WHERE session = "{ip}"')
             conn.commit()
 
