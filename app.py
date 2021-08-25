@@ -8,10 +8,10 @@ import telebot
 import os
 from autocorrect import Speller
 
+spelled = Speller(lang='ru')
 token = os.getenv('TELEGRAMBOT_TOKEN')
 app = Flask(__name__)
 add = []
-spelled = Speller(lang='ru')
 
 
 def shifr(message, check=False):
