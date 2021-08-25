@@ -100,7 +100,7 @@ def login():
                     conn.commit()
                     return jsonify({'code': 'sent'})
                 else:
-                    cur.execute(f'SELECT * FROM users WHERE session = {ip}')
+                    cur.execute(f'SELECT * FROM users WHERE session = "{ip}"')
                     ips = cur.fetchall()
                     for i in ips:
                         cur.execute(f'UPDATE users SET session = "" WHERE login = "{i[0]}"')
@@ -111,7 +111,6 @@ def login():
             else:
                 return jsonify({'error': 'Проверьте правильность введенного пароля или зарегистрируйтесь.'})
         except Exception as e:
-            print(e)
             return jsonify({'error': 'Произошла непридвиденная ошибка. Попробуйте авторизоваться заново.'})
     else:
         err = request.args.get('error')
