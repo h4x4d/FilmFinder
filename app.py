@@ -11,6 +11,7 @@ from autocorrect import Speller
 token = os.getenv('TELEGRAMBOT_TOKEN')
 app = Flask(__name__)
 add = []
+spelled = Speller(lang='ru')
 
 
 def shifr(message, check=False):
