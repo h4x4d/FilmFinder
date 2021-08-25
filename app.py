@@ -6,9 +6,8 @@ import hashlib
 import datetime
 import telebot
 import os
-from autocorrect import Speller
+from auto import Speller
 
-spelled = Speller(lang='ru')
 token = os.getenv('TELEGRAMBOT_TOKEN')
 app = Flask(__name__)
 add = []
