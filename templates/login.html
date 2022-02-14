@@ -10,8 +10,8 @@
 <div class="container">
 <main class="form-signin text-center">
   <form method="post" id="login">
-    <div class="row justify-content-center">
-      <div class="col-md-6">
+    <div class="row justify-content-center d-flex align-items-center mt-login">
+      <div class="col-md-6 align-self-center">
         <p class="fs-1 fw-bold">Вход:</p>
     <div class="alert alert-danger" role="alert" id="errAlert" style="display:none;">
       Проверьте правильность введенного логина или зарегистрируйтесь.
@@ -26,7 +26,7 @@
 
     {% if error == 3 %}
     <div class="alert alert-danger" role="alert">
-      Нужно авторизоваться или зарегистрироваться дла поиска фильмов.
+      Чтобы просматривать эту страницу необходима авторизация(
     </div>
     <div  class="interval"></div>
     {% endif %}
@@ -40,7 +40,7 @@
 
     {% if error == 123 %}
     <div class="alert alert-danger" role="alert">
-      Произошла непридвиденная ошибка. Попробуйте авторизоваться заново.
+      Произошла непредвиденная ошибка. Попробуйте авторизоваться заново.
     </div>
     <div  class="interval"></div>
     {% endif %}
@@ -52,10 +52,12 @@
           <label for="floatingInput">Логин</label>
           <div class="tab"></div>
         </div>
+      <div class="space-sm"></div>
         <div class="form-floating" id="password">
           <input type="password" class="form-control" id="floatingPassword" name="password" placeholder=" ">
           <label for="floatingPassword">Пароль</label>
         </div>
+        <div class="space-sm"></div>
         <div class="form-floating" id="code" style="display:none;">
           <input type="text" class="form-control" id="floatingCode" name="code" placeholder=" ">
           <label for="floatingPassword">Код из телеграмма</label>
@@ -68,12 +70,18 @@
       <div class="tab"></div>
   </div>
   </form>
-
+      <div class="space-sm"></div>
     <div class="row justify-content-center">
-      <div class="col-md-6">
+      <div class="col-md-6 my-auto align-self-center ">
         <form action="/register">
         <div class="form-floating" >
-    <input type="submit"  class="w-100 btn btn-lg btn-outline-secondary " value="Регистрация"/>
+    <input type="submit"  class="w-100 btn btn-lg btn-outline-secondary" value="Регистрация"/>
+    </div>
+        </form>
+                <div class="space-sm"></div>
+      <form action="/">
+        <div class="form-floating" >
+    <input type="submit"  class="w-100 btn btn-lg btn-outline-secondary" value="Режим без авторизации"/>
     </div>
         </form>
       </div>

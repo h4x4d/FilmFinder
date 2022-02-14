@@ -1,48 +1,65 @@
 {% extends 'base.html' %}
 {% block head %}
-<script src="{{ url_for('static', filename='js/result.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/result.js') }}"></script>
 {% endblock %}
 {% block title %}
-Результаты | FilmFinder
+    Результаты | FilmFinder
 {% endblock %}
 {% block body %}
-<div class="container">
-    <header class="d-flex justify-content-center py-3">
-      <ul class="nav nav-pills">
-        <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Главная</a></li>
-        <li class="nav-item"><a href="#" class="nav-link active" aria-current="page">Результаты</a></li>
-        <li class="nav-item"><a href="/liked" class="nav-link">Понравившиеся</a></li>
-        <li class="nav-item"><a href="/profile" class="nav-link">Профиль</a></li>
-      </ul>
-    </header>
-  </div>
-<div class="container">
+    <div class="container">
+        <header class="d-flex justify-content-center py-3">
+            <ul class="nav nav-pills">
+                <li class="nav-item"><a href="/" class="nav-link"
+                                        aria-current="page">Главная</a></li>
+                <li class="nav-item"><a href="#" class="nav-link active"
+                                        aria-current="page">Результаты</a></li>
+                <li class="nav-item"><a href="/liked" class="nav-link">Понравившиеся</a>
+                </li>
+                <li class="nav-item"><a href="/profile" class="nav-link">Профиль</a>
+                </li>
+            </ul>
+        </header>
+    </div>
+    <div class="container">
 
-    <p class="fs-1 fw-bold">Результаты поиска:</p>
-    {% if result %}
-    {% set a = {'num': 1} %}
-    {% for r in result %}
-    <p class="fs-2 fw-bold">{{ r[0] }}</p>
-    <div class="fs-3">{{ r[1] }} <i class="bi bi-arrow-right"></i> {{ r[2] }}</div>
-    <p class="fs-4">{{ 'Текст фразы: ' + r[3] }}</p>
-    <p class="fs-5 fw-light">{{ 'О фильме: ' + r[4] }}</p>
+        <p class="fs-1 fw-bold">Результаты поиска:</p>
+        {% if result %}
+            {% set a = {'num': 1} %}
+            {% for r in result %}
+                <p class="fs-2 fw-bold">{{ r[0] }}</p>
+                <div class="fs-3">{{ r[1] }} <i
+                        class="bi bi-arrow-right"></i> {{ r[2] }}</div>
+                <p class="fs-4">{{ 'Текст фразы: ' + r[3] }}</p>
+                <p class="fs-5 fw-light">{{ 'О фильме: ' + r[4] }}</p>
 
-    <form method="post" name="{{ r[6] }}" id="{{  'form' + r[6] }}">
-        {% if r[6] in like %}
-        <button type="submit" class="btn btn-outline-secondary" id="{{ 'add4d' + r[6] }}" name="hid-btn">Добавлено в понравившиеся</button>
+                <form method="post" name="{{ r[6] }}" id="{{ 'form' + r[6] }}">
+                    {% if r[6] in like %}
+                        <button type="submit" class="btn btn-outline-secondary"
+                                id="{{ 'add4d' + r[6] }}" name="hid-btn">
+                            Добавлено в понравившиеся
+                        </button>
+                    {% endif %}
+                    {% if r[6] not in like %}
+                        <button type="submit" class="btn btn-secondary"
+                                id="{{ 'add4' + r[6] }}" name="btn">Добавить в
+                            понравившиеся
+                        </button>
+                    {% endif %}
+                    <button type="submit" class="btn btn-outline-secondary"
+                            id="{{ 'added' + r[6] }}" name="hid-btn"
+                            style="display:none;">Добавлено в понравившиеся
+                    </button>
+                    <button type="submit" class="btn btn-secondary"
+                            id="{{ 'add' + r[6] }}" name="btn"
+                            style="display:none;">Добавить в понравившиеся
+                    </button>
+                </form>
+                {% if a.update({'num': a.num + 1}) %} {% endif %}
+                <hr>
+            {% endfor %}
         {% endif %}
-        {% if r[6] not in like %}
-        <button type="submit" class="btn btn-secondary" id="{{ 'add4' + r[6] }}" name="btn">Добавить в понравившиеся</button>
+        {% if not result %}
+            <p class="fs-2 fw-bold">Ничего не найдено</p>
         {% endif %}
-        <button type="submit" class="btn btn-outline-secondary" id="{{ 'added' + r[6] }}" name="hid-btn" style="display:none;">Добавлено в понравившиеся</button>
-        <button type="submit" class="btn btn-secondary" id="{{ 'add' + r[6] }}" name="btn" style="display:none;">Добавить в понравившиеся</button>
-        </form>
-    {% if a.update({'num': a.num + 1}) %} {% endif %}
-    <hr>
-    {% endfor %}
-    {% endif %}
-    {% if not result %}
-    <p class="fs-2 fw-bold">Ничего не найдено</p>
-    {% endif %}
-</div>
+    </div>
 {% endblock %}

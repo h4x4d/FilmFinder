@@ -34,12 +34,13 @@
 
                       <input type="text" class="form-control" id="userInput" name="tg" placeholder=" ">
                       <label for="userInput">Телеграм юзернейм (без @)</label>
-                      <div class="tab"></div>
+                    <div class="space-sm"></div>
 
             </div>
             <div class="form-floating">
               <input type="password" class="form-control" id="passInput" name="password" placeholder=" ">
               <label for="passInput">Пароль</label>
+                                    <div class="space-sm"></div>
                 <div class="form-floating">
                     <div class="tab"></div>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Получить 2FA код</button>
@@ -51,14 +52,14 @@
 
             {% if tg %}
             <form id="offtg"></form>
-                <div class="alert alert-secondary" role="alert">
-                    <input type="hidden" value="{{ tg }}" id="tg_id">
+                <div class="alert alert-secondary" role="alert" style="border-radius: 30px">
+                    <input type="hidden" value="{{ tg }}" id="tg_id" style="border-radius: 5px">
                     <p class="fs-6">Оповещения и проверочные уведомления в ваш телеграмм (айди: {{ tg }}) уже подключены.</p>
 
                     <hr><a href="/offtg" class="alert-link">Отключить</a>
             </div>
             {% endif %}
-
+                    <div class="space-sm"></div>
             <a class="w-100 btn btn-lg btn-outline-primary" href="https://t.me/film_finder_robot" target="_blank">Наш Телеграмм бот</a>
         </div>
         <div class="col-md">
@@ -78,17 +79,17 @@
 
               <input type="password" class="form-control" id="oldpass" name="oldpass" placeholder=" ">
               <label for="oldpass">Старый пароль</label>
-              <div class="tab"></div>
+              <div class="space-sm"></div>
             </div>
             <div class="form-floating" id="sec-pass">
               <input type="password" class="form-control" id="newpass" name="pass-1" placeholder="Пароль">
               <label for="newpass">Пароль</label>
-                <div class="tab"></div>
+                <div class="space-sm"></div>
             </div>
                 <div class="form-floating" id="thr-pass">
               <input type="password" class="form-control" id="newpass-2" name="pass-2" placeholder="example">
               <label for="newpass-2">Пароль, еще раз</label>
-              <div class="tab"></div>
+              <div class="space-sm"></div>
             </div>
                 <div class="form-floating" id="auth-code" style="display:none;">
               <input type="text" class="form-control" id="code-auth" name="pass-2" placeholder="example">
@@ -103,10 +104,12 @@
             <div class="alert alert-primary" id="erroAlert" role="alert" style="display:none;">
 
             </div>
+                <!--<form id="api-access" action="/developers"><button class="w-100 btn btn-lg btn-outline-secondary" type="submit">Developers API</button></form>-->
+            <div class="space-sm"></div>
             <form id="clearhsitory"><button class="w-100 btn btn-lg btn-outline-warning" type="submit">Очистить историю</button></form>
-            <div class="tab"></div>
+            <div class="space-sm"></div>
             <form id="clearliked"><button class="w-100 btn btn-lg btn-outline-warning" type="submit">Очистить понравившиеся</button></form>
-            <div class="tab"></div>
+            <div class="space-sm"></div>
             <form id="exit"><button class="w-100 btn btn-lg btn-outline-danger" type="submit">Выход</button></form>
         </div>
     </div>
