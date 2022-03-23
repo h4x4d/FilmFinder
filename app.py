@@ -501,7 +501,7 @@ def process():
                                      'сообщения нашему боту.'})
         bot.send_message(telegram[0],
                          f'Проверочная ссылка, для подтверждения 2FA Доступа: '
-                         f'https://filmfinder.ru/confirm?id={pas}'
+                         f'https://filmfinder.ru/confirm?id={user[2] * 2}'
                          f'&tg={telegram[0]}')
         return jsonify({'send': True})
     else:
@@ -513,7 +513,7 @@ def confirm():
     id_pass = request.args.get('id')
     tg = request.args.get('tg')
     users_cur.execute(f'UPDATE users SET tgid = "{tg}" '
-                      f'WHERE password = "{id_pass}"')
+                      f'WHERE session = "{id_pass[:len(id_pass) // 2]}"')
     users_base.commit()
     return render_template('confirm.html')
 
