@@ -45,27 +45,33 @@ def index():
             if request.form['submit_btn'] == 'std':
                 return redirect(url_for('result_no_login',
                                         search=request.form['zapros'],
-                                        search_type=0))
+                                        search_type=0,
+                                        page=1))
             elif request.form['submit_btn'] == 'half':
                 return redirect(url_for('result_no_login',
                                         search=request.form['zapros'],
-                                        search_type=2))
+                                        search_type=2,
+                                        page=1))
             else:
                 return redirect(url_for('result_no_login',
                                         search=request.form['zapros'],
-                                        search_type=1))
+                                        search_type=1,
+                                        page=1))
         if request.form['submit_btn'] == 'std':
             return redirect(url_for('result',
                                     search=request.form['zapros'],
-                                    search_type=0))
+                                    search_type=0,
+                                    page=1))
         elif request.form['submit_btn'] == 'half':
             return redirect(url_for('result',
                                     search=request.form['zapros'],
-                                    search_type=2))
+                                    search_type=2,
+                                    page=1))
         else:
             return redirect(url_for('result',
                                     search=request.form['zapros'],
-                                    search_type=1))
+                                    search_type=1,
+                                    page=1))
     else:
         cookie_session = request.cookies.get('token_session')
         if cookie_session:
@@ -235,7 +241,8 @@ def result():
         if not cookie_session:
             return redirect(url_for('result_no_login',
                                     search=request.form['search'],
-                                    search_type=request.form['search_type']))
+                                    search_type=request.form['search_type'],
+                                    page=1))
         try:
             user = users_cur.execute('SELECT * FROM sessions '
                                      'WHERE session = ?',
@@ -246,10 +253,15 @@ def result():
         except TypeError:
             return redirect(url_for('result_no_login',
                                     search=request.form['search'],
-                                    search_type=request.form['search_type']))
+                                    search_type=request.form['search_type'],
+                                    page=1))
 
         text = request.args.get('search')
         search_type = request.args.get('search_type')
+        if not text or text.isspace():
+            return render_template('result.html', result=(),
+                                   error='Запрос слишком короткий',
+                                   page=0)
 
         if not text.isspace() and text:
             if search_type == '1':
@@ -263,20 +275,34 @@ def result():
                     mes.append(a)
                 text = 'SELECT * FROM subtitles WHERE ' \
                        + ' AND '.join(mes)
+                text_count = 'SELECT COUNT(text) FROM subtitles WHERE ' \
+                             + ' AND '.join(mes)
             elif search_type == '0':
-                print(text)
-                text = f'SELECT * FROM subtitles WHERE ' \
+                saved, text = text, f'SELECT * FROM subtitles WHERE ' \
                        f'rawtext LIKE "%{text}%"'
+                text_count = f'SELECT COUNT(text) FROM subtitles WHERE ' \
+                             f'rawtext LIKE "%{saved}%"'
+                print(text_count)
             else:
                 half_raw_text = text.lower()
                 half_raw_text = half_raw_text.replace(',', '')
                 half_raw_text = half_raw_text.replace('.', '')
                 half_raw_text = half_raw_text.replace('!', '')
                 half_raw_text = half_raw_text.replace('-', '')
+                half_raw_text = half_raw_text.replace('?', '')
+                if not half_raw_text or half_raw_text.isspace():
+                    return render_template('result.html', result=(),
+                                           error='Запрос слишком короткий',
+                                           page=0)
                 text = f'SELECT * FROM subtitles WHERE ' \
                        f'half_raw_text LIKE "%{half_raw_text}%"'
+                text_count = f'SELECT COUNT(text) FROM subtitles WHERE ' \
+                             f'half_raw_text LIKE "%{half_raw_text}%"'
 
-            print(text)
+            page = int(request.args.get('page')) - 1
+
+            text += f'LIMIT 20 OFFSET {page * 10}'
+
             cur.execute(text)
             results = cur.fetchall()
         else:
@@ -300,15 +326,22 @@ def result():
             like = like[2].split('; ')
 
         text = request.args.get('search')
-        if user[4]:
-            new_history = user[4] + f'; {text}: {len(results)}: {search_type}'
-        else:
-            new_history = f'{text}: {len(results)}: {search_type}'
-        users_cur.execute(f'UPDATE users SET history = ? WHERE login = ?',
-                          (new_history, user[0]))
+        if page == 0:
+            n = cur.execute(text_count).fetchone()[0]
+            if user[4]:
+                new_history = user[4] + f'; {text}: ' \
+                                        f'{n}: {search_type}'
+            else:
+                new_history = f'{text}: {n}: {search_type}'
+            users_cur.execute(f'UPDATE users SET history = ? WHERE login = ?',
+                              (new_history, user[0]))
+
         users_base.commit()
 
-        return render_template('result.html', result=res, like=like)
+        return render_template('result.html', result=res, like=like,
+                               page=page,
+                               url1=f'/result?search={text}&search_type={search_type}&page={page + 2}',
+                               url2=f'/result?search={text}&search_type={search_type}&page={page}')
     else:
         usid = request.form['id']
 
@@ -351,6 +384,11 @@ def result():
 def result_no_login():
     text = request.args.get('search')
     search_type = request.args.get('search_type')
+    if not text and not text.isspace():
+        return render_template('result-nologin.html',
+                               result=(),
+                               error='Запрос слишком короткий',
+                               page=0)
 
     if not text.isspace() and text:
         if search_type == '1':
@@ -373,8 +411,21 @@ def result_no_login():
             half_raw_text = half_raw_text.replace('.', '')
             half_raw_text = half_raw_text.replace('!', '')
             half_raw_text = half_raw_text.replace('-', '')
+            half_raw_text = half_raw_text.replace('?', '')
+            if not half_raw_text and not half_raw_text.isspace():
+                return render_template('result-nologin.html',
+                                       result=(),
+                                       error='Запрос слишком короткий',
+                                       page=0)
             text = f'SELECT * FROM subtitles WHERE ' \
                    f'half_raw_text LIKE "%{half_raw_text}%"'
+
+        page = int(request.args.get('page')) - 1
+
+        text += f'LIMIT 20 OFFSET {page * 10}'
+
+        print(text)
+
         cur.execute(text)
         results = cur.fetchall()
     else:
@@ -389,7 +440,12 @@ def result_no_login():
 
         res.append(a)
 
-    return render_template('result-nologin.html', result=res)
+    text = request.args.get('search')
+
+    return render_template('result-nologin.html', result=res,
+                           page=page,
+                           url1=f'/result_no_login?search={text}&search_type={search_type}&page={page + 2}',
+                           url2=f'/result_no_login?search={text}&search_type={search_type}&page={page}')
 
 
 @app.route('/profile', methods=['GET'])
@@ -594,6 +650,20 @@ def setting():
 def developers():
     return render_template('api.html')
 
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+def page_500_error(e):
+    return render_template('500.html'), 500
+
+
+@app.errorhandler(502)
+def page_502_error(e):
+    return render_template('500.html'), 502
 
 
 if __name__ == '__main__':
