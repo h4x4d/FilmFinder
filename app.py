@@ -11,7 +11,7 @@ from string import ascii_lowercase, ascii_letters
 
 asc = ascii_lowercase + ascii_letters
 
-token = '1925289738:AAEvJmuSAK5ZgWF-51YDfI4o_SUWYkTxx2M'
+token = ''
 app = Flask(__name__)
 app.debug = True
 
