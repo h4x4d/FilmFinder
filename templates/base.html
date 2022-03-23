@@ -5,17 +5,17 @@
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}" type="image/png">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!--<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-          crossorigin="anonymous">-->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/user.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
-    <meta property="og:title" content="Film Finder" />
-    <meta property="og:url" content="https://filmfinder.ru/" />
-    <meta property="og:image" content="https://i.imgur.com/RcFmosb.png" />
-    <meta property="og:image:width" content="630" />
-<meta property="og:image:height" content="630" />
+    <meta name="description" content="Сайт для поиска фильмов по цитате из них.">
+    <meta property="og:title" content="FilmFinder - сервис для поиска фильмов" />
+    <meta property="og:description" content="Данный сервис позволяет найти фильм по фразе из него. Используется база данных более 500 фильмов и 600 тысяч строк текста" />
+    <meta property="og:url" content="https://filmfinder.ru/"/>
+    <meta property="og:site_name" content="filmfinder.ru"/>
+    <meta property="og:image" content="https://i.imgur.com/mxmIXHC.png" />
+    <meta property="og:image:width" content="1000" />
+    <meta property="og:image:height" content="1000" />
     <title>{% block title %}{% endblock %}</title>
     {% block head %}{% endblock %}
 </head>

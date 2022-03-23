@@ -21,7 +21,7 @@
     </div>
     <div class="container">
 
-        <p class="fs-1 fw-bold">Результаты поиска:</p>
+        <p class="fs-1 fw-bold">Результаты поиска (страница {{ page + 1 }}):</p>
         {% if result %}
             {% set a = {'num': 1} %}
             {% for r in result %}
@@ -35,7 +35,39 @@
             {% endfor %}
         {% endif %}
         {% if not result %}
-            <p class="fs-2 fw-bold">Ничего не найдено</p>
+            {% if error %}
+                <p class="fs-2 fw-bold">{{ error }}</p>
+            {% else %}
+                <p class="fs-2 fw-bold">Ничего не найдено</p>
+            {% endif %}
+
         {% endif %}
+        
+        {% if not a %}
+            <h2></h2>
+        {% elif page == 0 and a['num'] < 21 %}
+            <h2></h2>
+
+        {% elif page == 0 %}
+             <a href="{{ url1 }}" class="btn btn-outline-primary btn-lg" tabindex="-1" role="button">Следующая страница</a>
+                <br>
+         <br>
+         <br>
+        {% elif not a %}
+            <h2></h2>
+        {% elif a['num'] == 21 %}
+            <a href="{{ url2 }}" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button">Предыдущая страница</a>
+             <a href="{{ url1 }}" class="btn btn-outline-primary btn-lg" tabindex="-1" role="button">Следующая страница</a>
+        <br>
+         <br>
+         <br>
+        {% else %}
+             <a href="{{ url2 }}" class="btn btn-outline-secondary btn-lg" tabindex="-1" role="button">Предыдущая страница</a>
+                <br>
+         <br>
+         <br>
+
+        {% endif %}
+
     </div>
 {% endblock %}
