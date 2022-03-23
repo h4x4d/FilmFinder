@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block head %}
+{% endblock %}
+{% block title %}
+Ошибка | FilmFinder
+{% endblock %}
+{% block body %}
+<div class="container">
+    <header class="d-flex justify-content-center py-3">
+      <ul class="nav nav-pills">
+        <li class="nav-item"><a href="/" class="nav-link" aria-current="page">Главная</a></li>
+        <li class="nav-item"><a href="/liked" class="nav-link">Понравившиеся</a></li>
+        <li class="nav-item"><a href="/profile" class="nav-link">Профиль</a></li>
+      </ul>
+    </header>
+  </div>
+<div class="container"><p class="fs-1 fw-bold">Кажется, у нас проблемы с сервером или что-то поломалось. Подождите и все пройдет.</p></div>
+{% endblock %}
