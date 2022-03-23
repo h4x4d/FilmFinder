@@ -11,7 +11,7 @@ from string import ascii_lowercase, ascii_letters
 
 asc = ascii_lowercase + ascii_letters
 
-token = ''
+token = '1925289738:AAEvJmuSAK5ZgWF-51YDfI4o_SUWYkTxx2M'
 app = Flask(__name__)
 app.debug = True
 
@@ -501,7 +501,7 @@ def process():
                                      'сообщения нашему боту.'})
         bot.send_message(telegram[0],
                          f'Проверочная ссылка, для подтверждения 2FA Доступа: '
-                         f'https://filmfinder.ru/confirm?id={user[2] * 2}'
+                         f'https://filmfinder.ru/confirm?id={user[7] * 1372 - 11}'
                          f'&tg={telegram[0]}')
         return jsonify({'send': True})
     else:
@@ -510,10 +510,10 @@ def process():
 
 @app.route('/confirm')
 def confirm():
-    id_pass = request.args.get('id')
+    id_pass = int(request.args.get('id')) + 11
     tg = request.args.get('tg')
     users_cur.execute(f'UPDATE users SET tgid = "{tg}" '
-                      f'WHERE session = "{id_pass[:len(id_pass) // 2]}"')
+                      f'WHERE id = "{id_pass // 1372}"')
     users_base.commit()
     return render_template('confirm.html')
 
